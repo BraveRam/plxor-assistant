@@ -1,5 +1,5 @@
-import { createBot } from "./bot.ts";
-import { getConfig } from "./bot.ts";
+import { createBot } from "./bot";
+import { getConfig } from "./bot";
 
 async function main() {
   console.log("Bot is starting with long polling...");
