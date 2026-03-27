@@ -137,6 +137,7 @@ type MediaPreference = {
   shouldPushMedia: boolean;
   preferredKind: "gif" | "sticker" | "either";
   fallbackIntent: MediaIntent;
+  forceFallback: boolean;
 };
 
 const MEDIA_INTENTS = [
@@ -492,6 +493,7 @@ function maybeAddFallbackMedia(
   config: AppConfig,
 ) {
   if (!mediaPreference.shouldPushMedia) return;
+  if (!mediaPreference.forceFallback) return;
   if (state.actions.some((action) => action.kind === "sticker" || action.kind === "gif")) return;
   if (state.actions.length >= config.maxMessagesPerTurn) return;
 
@@ -564,9 +566,10 @@ function getMediaPreference(incomingText: string): MediaPreference {
       laughs ||
       cooked ||
       tired ||
-      proud ||
-      sad ||
-      Math.random() < 0.55,
+      (proud && Math.random() < 0.35) ||
+      (sad && Math.random() < 0.25) ||
+      Math.random() < 0.12,
+    forceFallback: mentionsGif || mentionsSticker || laughs || cooked,
     preferredKind: mentionsGif
       ? "gif"
       : mentionsSticker
@@ -623,10 +626,11 @@ Message planning:
 - You can send up to ${maxMessagesPerTurn} outbound messages in this turn.
 - Use multiple messages only when it feels like an actual texting burst.
 - Keep the whole turn compact.
-- Favor text first, but use custom emoji, stickers, and gifs frequently when they genuinely fit.
-- If the other person sends a sticker or gif, treat it as a reaction cue and consider replying with a sticker or gif when that fits.
+- Default to text.
+- Use stickers or gifs only sometimes, when they make the reply better.
+- If the other person sends a sticker or gif, treat it as a reaction cue, but do not mirror media every time.
 - In this turn, media preference is ${mediaPreference.preferredKind} and the likely reaction mood is ${mediaPreference.fallbackIntent}.
-- If a sticker or gif would work, actually use one. Do not keep defaulting to text-only replies.
+- It is completely fine to stay text-only even when media could work.
 - Avoid sending more than one media item in a turn unless absolutely necessary.
 - End every turn by calling finish_response.
 
