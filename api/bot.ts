@@ -589,13 +589,13 @@ function getMediaPreference(incomingText: string): MediaPreference {
     shouldPushMedia:
       mentionsGif ||
       mentionsSticker ||
-      laughs ||
-      cooked ||
-      tired ||
-      (proud && Math.random() < 0.35) ||
-      (sad && Math.random() < 0.25) ||
-      Math.random() < 0.12,
-    forceFallback: mentionsGif || mentionsSticker || laughs || cooked,
+      (laughs && Math.random() < 0.45) ||
+      (cooked && Math.random() < 0.5) ||
+      (tired && Math.random() < 0.25) ||
+      (proud && Math.random() < 0.15) ||
+      (sad && Math.random() < 0.1) ||
+      Math.random() < 0.04,
+    forceFallback: mentionsGif || mentionsSticker,
     preferredKind: mentionsGif
       ? "gif"
       : mentionsSticker
@@ -653,7 +653,8 @@ Message planning:
 - Use multiple messages only when it feels like an actual texting burst.
 - Keep the whole turn compact.
 - Default to text.
-- Use stickers or gifs only sometimes, when they make the reply better.
+- Use stickers or gifs occasionally, not often.
+- Only use media when it clearly improves the reaction.
 - If the other person sends a sticker or gif, treat it as a reaction cue, but do not mirror media every time.
 - In this turn, media preference is ${mediaPreference.preferredKind} and the likely reaction mood is ${mediaPreference.fallbackIntent}.
 - It is completely fine to stay text-only even when media could work.
