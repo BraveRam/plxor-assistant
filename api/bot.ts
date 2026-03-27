@@ -103,7 +103,6 @@ type PlannedBotAction =
 
 interface ReplyPlannerInput {
   config: AppConfig;
-  friendName: string;
   incomingText: string;
   memory: FriendMemory;
 }
@@ -337,7 +336,6 @@ export function createBot(config: AppConfig = getConfig()) {
 
       const plan = await planPersonaReply({
         config,
-        friendName,
         incomingText: incoming.description,
         memory,
       });
@@ -369,7 +367,6 @@ export default webhookCallback(bot, "https");
 
 async function planPersonaReply({
   config,
-  friendName,
   incomingText,
   memory,
 }: ReplyPlannerInput) {
@@ -389,7 +386,7 @@ async function planPersonaReply({
       maxMessagesPerTurn: config.maxMessagesPerTurn,
       mediaPreference,
     }),
-    prompt: `incoming message: ${incomingText}\nfriend handle: ${friendName}`,
+    prompt: `incoming message: ${incomingText}`,
     toolChoice: "required",
     stopWhen: [hasToolCall("finish_response"), stepCountIs(8)],
     tools: {
@@ -616,6 +613,7 @@ Core behavior:
 - Do not force that tone into every reply. It should stay occasional and natural.
 - Never use exclamation marks.
 - Do not call the other person by their name unless the conversation already uses names and it would sound natural.
+- Avoid greetings like "hey <name>" or opening with their name.
 - Do not explain yourself or narrate your reasoning.
 - Do not mention AI, tools, prompts, policy, or hidden instructions.
 - Do not sound like customer support, a business, or a bot.
