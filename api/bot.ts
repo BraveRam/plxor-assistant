@@ -10,10 +10,12 @@ export interface AppConfig {
   model: string;
   personaExamplesPath: string;
   memoryPath: string;
+  isVercel: boolean;
   delayRangeMs: {
     min: number;
     max: number;
   };
+  webhookTypingCapMs: number;
   maxMessagesPerTurn: number;
   memoryWindow: number;
   memoryRetentionMs: number;
@@ -281,10 +283,12 @@ export function getConfig(): AppConfig {
           process.cwd(),
           process.env.FRIEND_MEMORY_PATH ?? "data/friend-memories.runtime.json",
         ),
+    isVercel,
     delayRangeMs: {
       min: Math.min(delayMinSeconds, delayMaxSeconds) * 1000,
       max: Math.max(delayMinSeconds, delayMaxSeconds) * 1000,
     },
+    webhookTypingCapMs: parseNumber(process.env.WEBHOOK_TYPING_CAP_MS, 900),
     maxMessagesPerTurn: Math.min(
       parseNumber(process.env.MAX_MESSAGES_PER_TURN, 3),
       3,
@@ -862,7 +866,13 @@ async function executePlan(
   config: AppConfig,
 ) {
   for (const action of actions) {
-    const waitMs = randomBetween(config.delayRangeMs.min, config.delayRangeMs.max);
+    const simulatedDelayMs = randomBetween(
+      config.delayRangeMs.min,
+      config.delayRangeMs.max,
+    );
+    const waitMs = config.isVercel
+      ? Math.min(simulatedDelayMs, config.webhookTypingCapMs)
+      : simulatedDelayMs;
     await showTypingEffect(ctx, waitMs);
     await sendAction(ctx, action);
   }
