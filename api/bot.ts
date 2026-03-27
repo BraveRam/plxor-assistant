@@ -325,6 +325,8 @@ export function createBot(config: AppConfig = getConfig()) {
         return;
       }
 
+      await markBusinessMessageAsRead(ctx);
+
       const friendId = String(ctx.from?.id ?? ctx.chat?.id ?? "unknown");
       const friendName =
         ctx.from?.first_name ?? ctx.from?.username ?? `friend-${friendId}`;
@@ -360,6 +362,30 @@ export function createBot(config: AppConfig = getConfig()) {
   });
 
   return bot;
+}
+
+async function markBusinessMessageAsRead(ctx: Context) {
+  const businessConnectionId = ctx.msg?.business_connection_id;
+  const chatId = ctx.chat?.id;
+  const messageId = ctx.msg?.message_id;
+
+  if (
+    businessConnectionId == null ||
+    chatId == null ||
+    messageId == null
+  ) {
+    return;
+  }
+
+  try {
+    await ctx.api.readBusinessMessage(
+      businessConnectionId,
+      chatId,
+      messageId,
+    );
+  } catch (error) {
+    console.error("Failed to mark business message as read:", error);
+  }
 }
 
 const bot = createBot(getConfig());
