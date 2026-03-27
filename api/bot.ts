@@ -325,8 +325,6 @@ export function createBot(config: AppConfig = getConfig()) {
         return;
       }
 
-      await markBusinessMessageAsRead(ctx);
-
       const friendId = String(ctx.from?.id ?? ctx.chat?.id ?? "unknown");
       const friendName =
         ctx.from?.first_name ?? ctx.from?.username ?? `friend-${friendId}`;
@@ -354,6 +352,8 @@ export function createBot(config: AppConfig = getConfig()) {
         config.memoryWindow,
         config.memoryRetentionMs,
       );
+
+      await markBusinessMessageAsRead(ctx);
     },
   );
 
