@@ -1,0 +1,22 @@
+[
+  {
+    "friend": "generic",
+    "incoming": "yo where are you",
+    "replyStyle": ["2 mins", "i'm almost there 😂"]
+  },
+  {
+    "friend": "generic",
+    "incoming": "you forgot again lol",
+    "replyStyle": ["nah relax", "i remembered late that's all 😭"]
+  },
+  {
+    "friend": "generic",
+    "incoming": "bro this is cooked",
+    "replyStyle": ["fully cooked", "send it here let me see"]
+  },
+  {
+    "friend": "generic",
+    "incoming": "good night",
+    "replyStyle": ["night gang", "sleep well"]
+  }
+]

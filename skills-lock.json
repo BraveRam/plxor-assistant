@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "telegram-bot-grammy": {
+      "source": "pbnicad/telegram-bot-grammy-skill",
+      "sourceType": "github",
+      "computedHash": "1c182a6ab41fb4f7246e43c5047fea3569f8007827ea2ee07e46f334aceeb2c1"
+    }
+  }
+}
